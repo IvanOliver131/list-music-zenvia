@@ -9,8 +9,8 @@ const client = new Client(process.env.ZENVIA_TOKEN);
 
 const whatsapp = client.getChannel('whatsapp');
 
-const webhook = new WebhookController({
-  channel: 'whatsapp',
+
+const webhook = new WebhookController({ 
   messageEventHandler: async (messageEvent) => {
     let content = [new TextContent('Testado')];
 
@@ -65,14 +65,16 @@ const recognizeMusic = async (url) => {
     resolveBodyOnly: true,
   });
 
-  if (response && response.result) {
+  const data = JSON.parse(response.body);
+
+  if (data && data.result) {
     return {
-      artist: response.result.artist,
-      title: response.result.title,
-      album: response.result.album,
+      artist: data.result.artist,
+      title: data.result.title,
+      album: data.result.album,
       deezer: {
-        picture: response.result.deezer && response.result.deezer.artist ? response.result.deezer.artist.picture_medium : undefined,
-        preview: response.result.deezer ? response.result.deezer.preview : undefined,
+        picture: data.result.deezer && data.result.deezer.artist ? data.result.deezer.artist.picture_medium : undefined,
+        preview: data.result.deezer ? data.result.deezer.preview : undefined,
       },
     };
   }
